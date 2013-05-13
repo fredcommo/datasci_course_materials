@@ -1,0 +1,30 @@
+
+# AS2P1a: Simple query: count the number of items and returns the answer in a file instead of stdout
+.output select.txt
+SELECT count(*) FROM Frequency WHERE docid = '10398_txt_earn';
+
+# AS2P1b: Combined query
+.output select_project.txt
+SELECT count(*) FROM Frequency WHERE docid = '10398_txt_earn' AND count = '1';
+
+# AS2P1c: Combined query allowing replicates
+SELECT count(term) FROM(
+    SELECT term FROM Frequency where docid = '10398_txt_earn' AND count = '1'
+  UNION ALL
+     SELECT term FROM Frequency where docid = '925_txt_trade' AND count = '1'
+  );
+
+# Combined query without replicates (default)
+  SELECT count(term) FROM(
+    SELECT term FROM Frequency where docid = '10398_txt_earn' AND count = '1'
+  UNION
+     SELECT term FROM Frequency where docid = '925_txt_trade' AND count = '1'
+  );
+
+# Display the table with the same query
+.output stdout
+SELECT * FROM(
+SELECT * FROM Frequency where docid = '10398_txt_earn' AND count = '1'
+UNION
+SELECT * FROM Frequency where docid = '925_txt_trade' AND count = '1'
+);
